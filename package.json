@@ -1,0 +1,21 @@
+{
+  "name": "aparecium",
+  "version": "1.0.0",
+  "description": "harry potter visualised",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "tape src/test.js | tap-spec"
+  },
+  "author": "Rachael O'Rourke",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.3",
+    "supertest": "^3.0.0",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0"
+  }
+}
