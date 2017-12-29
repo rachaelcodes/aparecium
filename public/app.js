@@ -8,7 +8,8 @@ var pieData = [{"label": "Gryffindor", "value": 41},
     {"label": "Slytherin", "value": 23},
     {"label": "Hufflepuff", "value": 13},
     {"label": "Ravenclaw", "value": 17},
-    {"label": "Unknown", "value": 101}];
+    {"label": "Unknown", "value": 101}
+];
 
 var width = 300,
     height = 300,
