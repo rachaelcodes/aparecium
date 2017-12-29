@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const rp = require('request-promise');
+const summarise = require('../summarise');
 
 router.get('/', (req, res, next) => {
     rp({
@@ -9,7 +10,7 @@ router.get('/', (req, res, next) => {
             key: process.env.API_KEY
         },
         json: true
-    }).then((response)=>{res.send(response)});
+    }).then((response)=>{res.send(summarise(response))});
 })
 
 module.exports = router;

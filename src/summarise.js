@@ -1,26 +1,32 @@
 module.exports = (json) => {
-    const returned = [{'gryffindor': [], 'slytherin': [], 'hufflepuff': [], 'ravenclaw': [], 'noHouse': []}]
+    const gryffindor = [];
+    const slytherin = [];
+    const hufflepuff = [];
+    const ravenclaw = [];
+    const noHouse = [];
+    const returned = {'gryffindor': gryffindor, 'slytherin': slytherin, 'hufflepuff': hufflepuff, 'ravenclaw': ravenclaw, 'noHouse': noHouse}
 
 //UPDATE JSON MAP WITH THE STRINGS AROUND NAMES!!!!!
 
     json.map((wizard) => {
         switch (wizard.house) {
-            case gryffindor:
-                returned[0].gryffindor.push(wizard);
+            case 'Gryffindor':
+                gryffindor.push(wizard);
                 break;
-            case slytherin:
-                returned[0].slytherin.push(wizard);
+            case 'Slytherin':
+                slytherin.push(wizard);
                 break;
-            case hufflepuff:
-                returned[0].hufflepuff.push(wizard);
+            case 'Hufflepuff':
+                hufflepuff.push(wizard);
                 break;
-            case ravenclaw:
-                returned[0].ravenclaw.push(wizard);
+            case 'Ravenclaw':
+                ravenclaw.push(wizard);
                 break;
             default:
-                returned[0].noHouse.push
+                noHouse.push(wizard);
+                break;
         }
     })
 
-    return json
+    return [returned]
 }
