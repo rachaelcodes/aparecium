@@ -2,3 +2,5 @@
 
 .env
 config.env
+
+src/example_data.json

@@ -7,7 +7,8 @@ router.get('/', (req, res, next) => {
     rp({
         uri: 'https://www.potterapi.com/v1/characters',
         qs: {
-            key: process.env.API_KEY
+            key: process.env.API_KEY,
+            school:'Hogwarts School of Witchcraft and Wizardry' 
         },
         json: true
     }).then((response)=>{res.send(summarise(response))});
