@@ -1,4 +1,5 @@
 var api_btn = document.getElementById('api_call');
+var reset_btn = document.getElementById('reset');
 var good_btn =document.getElementById('good_filter');
 var neutral_btn =document.getElementById('neutral_filter');
 var evil_btn =document.getElementById('evil_filter');
@@ -50,29 +51,50 @@ function generatePie(generateData) {
         g.append("path")
             .attr("d", arc)
             .style("fill", function(d,i) {return color(i)})
+            .each(function(d) {this._current = d;});
 
         g.append("text")
             .attr("transform", function(d) {return "translate(" + labelArc.centroid(d) + ")"; })
             .text(function (d) {return d.data.key})
+            .each(function(d) {this._current = d;});
+}
+
+function arcTween(ar) {
+    var i = d3.interpolate(this._current, ar);
+    this._current = i(0);
+    return function(t){
+        return arc(i(t));
+    };
+}
+
+function labelArcTween(ar) {
+    var i = d3.interpolate(this._current, ar);
+    this._current = i(0);
+    return function(t){
+        return "translate(" + labelArc.centroid(i(t)) + ")";
+    };
 }
 
 function change() {
     var pie = d3.pie()
         .value(function (d) {return d.value;})(pieData);
     path = d3.select("#pie").selectAll("path").data(pie);
-    path.attr("d", arc);
+    // 
+    path.transition().duration(1000).attrTween("d", arcTween);
     path.exit().remove();
     var text = d3.selectAll("text")
         .data(pie)
+            .attr("style", "display: block;")
         .attr("class", "update")
-        .attr("transform", function(d) {return "translate(" + labelArc.centroid(d) + ")"; });
+        .transition().duration(1000).attrTween("transform", labelArcTween);
+
     text
-        .data(pie)
         .filter(function(d){return d.value===0})
             .attr("style", "display: none;");
-    // text.enter().append("text").text(function (d) {return d.data.key});
-    text.exit().remove();
+
 }
+
+
 
 function filterData (category) {
     var dataFiltered = [];
@@ -139,6 +161,15 @@ api_btn.addEventListener('click', function ()
     myRequest.send();
 
 });
+
+reset_btn.addEventListener('click', function() {
+    pieData = d3.nest()
+            .key(function(d) { return d.house; }).sortKeys(d3.ascending)
+            .rollup(function(leaves) { return leaves.length; })
+            .entries(data);
+
+    change();
+})
 
 good_btn.addEventListener('click', function() {
     filterData('good');
