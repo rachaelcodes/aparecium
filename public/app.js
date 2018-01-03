@@ -6,9 +6,12 @@ var evil_btn =document.getElementById('evil_filter');
 var muggle_btn =document.getElementById('muggles');
 var wizard_btn =document.getElementById('wizards');
 var mom_btn = document.getElementById('mom_filter');
+var details = document.getElementById('details');
 
-var data = {};
+var data = [];
 var pieData = [];
+var dataFiltered = [];
+var displayed = [];
 
 var width = 300,
     height = 300,
@@ -30,7 +33,6 @@ function generatePie(generateData) {
             .rollup(function(leaves) { return leaves.length; })
             .entries(generateData);
         
-            console.log(pieData);
         var pie = d3.pie()
             .value(function (d) {return d.value;})(pieData);
 
@@ -45,6 +47,8 @@ function generatePie(generateData) {
         .data(pie)
         .enter()
         .append("g")
+        .on("click", function(d){
+            d.data.key ? clickArc(d.data.key): clickArc('undefined'); })
         .filter(function(d) {return d.value >0})
             .attr("class", "arc");
 
@@ -55,7 +59,7 @@ function generatePie(generateData) {
 
         g.append("text")
             .attr("transform", function(d) {return "translate(" + labelArc.centroid(d) + ")"; })
-            .text(function (d) {return d.data.key})
+            .text(function (d) {if (d.data.key ==="undefined"){return "Not known"} else return d.data.key})
             .each(function(d) {this._current = d;});
 }
 
@@ -97,7 +101,6 @@ function change() {
 
 
 function filterData (category) {
-    var dataFiltered = [];
 
     switch (category) {
         case "good":
@@ -139,8 +142,65 @@ function filterData (category) {
         return 0;
       });
 
-    console.log(pieData);
     change();
+}
+
+function clickArc(house){
+    
+    while (details.firstChild) {
+        details.removeChild(details.firstChild);
+      }
+      
+    var nameList = document.createElement("ul");
+    house==="undefined" ? 
+    retrieveUnknowns().forEach(function(name) {
+        var newNode = document.createElement("li")
+        newNode.textContent = name;
+        nameList.appendChild(newNode);
+    })
+    : retrieveNames(house).forEach(function(name) {
+        var newNode = document.createElement("li")
+        newNode.textContent = name;
+        nameList.appendChild(newNode);
+    });
+
+    details.appendChild(nameList);
+
+};
+
+function retrieveUnknowns() {
+    var nameList = [];
+
+    (dataFiltered.length>0) ?
+        nameList = dataFiltered.reduce(function(array, wizard) {
+            if (!wizard.house) {array.push(wizard.name)}
+            return array;
+        }, []) :
+        nameList = data.reduce(function(array, wizard) {
+            if (!wizard.house) {array.push(wizard.name)}
+            return array;
+        }, []);
+    
+
+    return nameList;
+
+};
+
+function retrieveNames(house) {
+    var nameList = [];
+
+    (dataFiltered.length>0) ?
+        nameList = dataFiltered.reduce(function(array, wizard) {
+            if (wizard.house===house) {array.push(wizard.name)}
+            return array;
+        }, []) :
+        nameList = data.reduce(function(array, wizard) {
+            if (wizard.house===house) {array.push(wizard.name)}
+            return array;
+        }, []);
+    
+
+    return nameList;
 }
 
 api_btn.addEventListener('click', function ()
@@ -153,7 +213,6 @@ api_btn.addEventListener('click', function ()
             data = JSON.parse(myRequest.responseText); 
 
         generatePie(data);
-
       } 
     }
 
@@ -163,11 +222,14 @@ api_btn.addEventListener('click', function ()
 });
 
 reset_btn.addEventListener('click', function() {
+    
+    dataFiltered = [];
+    
     pieData = d3.nest()
             .key(function(d) { return d.house; }).sortKeys(d3.ascending)
             .rollup(function(leaves) { return leaves.length; })
             .entries(data);
-
+    
     change();
 })
 
