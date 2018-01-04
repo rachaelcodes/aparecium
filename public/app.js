@@ -153,12 +153,12 @@ function clickArc(house){
       
     var nameList = document.createElement("ul");
     house==="undefined" ? 
-    retrieveUnknowns().forEach(function(name) {
+    retrieveUnknowns(dataFiltered, data).forEach(function(name) {
         var newNode = document.createElement("li")
         newNode.textContent = name;
         nameList.appendChild(newNode);
     })
-    : retrieveNames(house).forEach(function(name) {
+    : retrieveNames(house, dataFiltered, data).forEach(function(name) {
         var newNode = document.createElement("li")
         newNode.textContent = name;
         nameList.appendChild(newNode);
@@ -167,41 +167,6 @@ function clickArc(house){
     details.appendChild(nameList);
 
 };
-
-function retrieveUnknowns() {
-    var nameList = [];
-
-    (dataFiltered.length>0) ?
-        nameList = dataFiltered.reduce(function(array, wizard) {
-            if (!wizard.house) {array.push(wizard.name)}
-            return array;
-        }, []) :
-        nameList = data.reduce(function(array, wizard) {
-            if (!wizard.house) {array.push(wizard.name)}
-            return array;
-        }, []);
-    
-
-    return nameList;
-
-};
-
-function retrieveNames(house) {
-    var nameList = [];
-
-    (dataFiltered.length>0) ?
-        nameList = dataFiltered.reduce(function(array, wizard) {
-            if (wizard.house===house) {array.push(wizard.name)}
-            return array;
-        }, []) :
-        nameList = data.reduce(function(array, wizard) {
-            if (wizard.house===house) {array.push(wizard.name)}
-            return array;
-        }, []);
-    
-
-    return nameList;
-}
 
 api_btn.addEventListener('click', function ()
 {
