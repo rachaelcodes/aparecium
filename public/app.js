@@ -12,20 +12,21 @@ var data = [];
 var pieData = [];
 var dataFiltered = [];
 var displayed = [];
+var margin = {top: 10, right: 20, bottom: 10, left: 20};
 
-var width = 300,
-    height = 300,
+var width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom,
     radius = Math.min(width, height)/2;
 
 var color = d3.scaleOrdinal(["#cb3030", "e1e34d", "#7171e1", "#359c35", "e3aa3a"]);
 
 var arc = d3.arc()
-    .outerRadius(radius-10)
+    .outerRadius(radius * 0.7)
     .innerRadius(0);
 
 var labelArc = d3.arc()
-    .outerRadius(radius-40)
-    .innerRadius(radius-40);
+    .outerRadius(radius*0.85)
+    .innerRadius(radius*0.85);
 
 function generatePie(generateData) {
     pieData = d3.nest()
@@ -38,8 +39,9 @@ function generatePie(generateData) {
 
         var svg = d3.select('#pie')
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .call(responsivefy)
             .append("g")
                 .attr("transform", "translate(" + width/2 + "," + height/2 +")");
     
@@ -57,10 +59,35 @@ function generatePie(generateData) {
             .style("fill", function(d,i) {return color(i)})
             .each(function(d) {this._current = d;});
 
+        
         g.append("text")
             .attr("transform", function(d) {return "translate(" + labelArc.centroid(d) + ")"; })
             .text(function (d) {if (d.data.key ==="undefined"){return "Not known"} else return d.data.key})
-            .each(function(d) {this._current = d;});
+            .attr('transform', labelTransform)
+            // .attr('dy', '.35em')
+            .style('text-anchor', function(d) {
+                return (midAngle(d)) < Math.PI ? 'start' : 'end';
+            })
+            .each(function(d) {this._current = d;})
+            ;
+        
+        g.append("polyline")
+            .attr('points', calculatePoints)
+
+}
+
+function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
+
+function labelTransform(d) {
+    var pos = labelArc.centroid(d);
+    pos[0] = radius * 0.7 * (midAngle(d) < Math.PI ? 1 : -1);
+    return 'translate(' + pos + ')';
+}
+
+function calculatePoints(d) {
+    var pos = labelArc.centroid(d);
+    pos[0] = radius * 0.7 * (midAngle(d) < Math.PI ? 1 : -1);
+    return [arc.centroid(d), labelArc.centroid(d), pos]
 }
 
 function arcTween(ar) {
@@ -75,7 +102,22 @@ function labelArcTween(ar) {
     var i = d3.interpolate(this._current, ar);
     this._current = i(0);
     return function(t){
-        return "translate(" + labelArc.centroid(i(t)) + ")";
+        var d2  = i(t),
+            pos = labelArc.centroid(d2); 
+            pos[0] = radius * 0.7 * (midAngle(d2) < Math.PI ? 1 : -1); 
+            return 'translate(' + pos + ')';
+        };
+    
+}
+
+function pointTween(ar) {
+    var i = d3.interpolate(this._current, ar);
+    this._current = i(0);
+    return function(t){
+        var d2  = i(t),
+            pos = labelArc.centroid(d2);
+        pos[0] = radius * 0.7 * (midAngle(d2) < Math.PI ? 1 : -1);
+        return [arc.centroid(d2), labelArc.centroid(d2), pos];
     };
 }
 
@@ -90,38 +132,29 @@ function change() {
         .data(pie)
             .attr("style", "display: block;")
         .attr("class", "update")
+        .style('text-anchor', function(d) { return (midAngle(d)) < Math.PI ? 'start' : 'end'; })
         .transition().duration(1000).attrTween("transform", labelArcTween);
 
     text
         .filter(function(d){return d.value===0})
             .attr("style", "display: none;");
 
+    var lines = d3.selectAll("polyline")
+        .data(pie)
+            .attr("style", "display: block;")
+        .transition().duration(1000).attrTween("points", pointTween);
+    
+    lines
+        .filter(function(d){return d.value===0})
+            .attr("style", "display: none;");   
+
 }
 
 
 
-function filterData (category) {
+function filterData (category, data) {
 
-    switch (category) {
-        case "good":
-        dataFiltered = data.filter(function (d) {return d.orderOfThePhoenix===true || d.dumbledoresArmy===true})
-        break;
-        case "neutral":
-        dataFiltered = data.filter(function(d) {return d.orderOfThePhoenix===false && d.dumbledoresArmy===false && d.deathEater===false})
-        break;
-        case "deathEater":
-        dataFiltered = data.filter(function (d) {return d.deathEater===true})
-        break;
-        case "muggleBorn":
-        dataFiltered = data.filter(function (d) {return d.bloodStatus==="muggle-born" || d.bloodStatus==="half-blood"})
-        break;
-        case "wizardsOnly":
-        dataFiltered = data.filter(function (d) {return d.bloodStatus==="pure-blood"})
-        break;
-        case "bureaucrats":
-        dataFiltered = data.filter(function(d){return d.ministryOfMagic===true})
-        break;
-    }
+    dataFiltered = filter(category, data);
     
     pieData = d3.nest()
             .key(function(d) { return d.house; })
@@ -168,6 +201,26 @@ function clickArc(house){
 
 };
 
+function responsivefy(svg) {
+    var container = d3.select(svg.node().parentNode),
+    width = parseInt(svg.style("width")),
+    height = parseInt(svg.style("height")),
+    aspect = width/height;
+
+    svg.attr("viewBox", "0 0 " + width + " " + height)
+        .attr("preseveAspectRatio", "xMinYMid")
+        .call(resize);
+
+    d3.select(window).on("resize." + container.attr("id"), resize);
+
+    function resize() {
+        var targetWidth = parseInt(container.style("width"));
+        svg.attr("width", targetWidth);
+        svg.attr("height", Math.round(targetWidth/aspect));
+    }
+
+}
+
 api_btn.addEventListener('click', function ()
 {
     console.log('request made')
@@ -199,25 +252,29 @@ reset_btn.addEventListener('click', function() {
 })
 
 good_btn.addEventListener('click', function() {
-    filterData('good');
+    filterData('good', data);
 });
 
 neutral_btn.addEventListener('click', function() {
-    filterData('neutral');
+    filterData('neutral', data);
 });
 
 evil_btn.addEventListener('click', function() {
-    filterData('deathEater');
+    filterData('deathEater', data);
 });
 
 muggle_btn.addEventListener('click', function(){
-    filterData('muggleBorn');
+    filterData('muggleBorn', data);
 })
 
 wizard_btn.addEventListener('click', function(){
-    filterData('wizardsOnly');
+    filterData('wizardsOnly', data);
 })
 
 mom_btn.addEventListener('click', function(){
-    filterData('bureaucrats');
+    filterData('bureaucrats', data);
 })
+
+//Useful articles: 
+//https://bl.ocks.org/mbhall88/22f91dc6c9509b709defde9dc29c63f2#license
+//http://www.cagrimmett.com/til/2016/08/19/d3-pie-chart.html

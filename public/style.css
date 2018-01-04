@@ -2,3 +2,10 @@ svg {
     overflow: visible;
 }
 
+polyline {
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+    shape-rendering: geometricPrecision;
+}
