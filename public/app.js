@@ -156,6 +156,10 @@ function filterData (category, data) {
 
     dataFiltered = filter(category, data);
     
+    while (details.firstChild) {
+        details.removeChild(details.firstChild);
+      }
+
     pieData = d3.nest()
             .key(function(d) { return d.house; })
             .rollup(function(leaves) { return leaves.length; })
