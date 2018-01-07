@@ -3,9 +3,6 @@ function filter(category, data) {
         case "good":
         return data.filter(function (d) {return d.orderOfThePhoenix===true || d.dumbledoresArmy===true})
         break;
-        case "neutral":
-        return data.filter(function(d) {return d.orderOfThePhoenix===false && d.dumbledoresArmy===false && d.deathEater===false})
-        break;
         case "deathEater":
         return data.filter(function (d) {return d.deathEater===true})
         break;

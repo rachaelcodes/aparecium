@@ -1,32 +1,53 @@
-var api_btn = document.getElementById('api_call');
-var reset_btn = document.getElementById('reset');
-var good_btn =document.getElementById('good_filter');
-var neutral_btn =document.getElementById('neutral_filter');
-var evil_btn =document.getElementById('evil_filter');
-var muggle_btn =document.getElementById('muggles');
-var wizard_btn =document.getElementById('wizards');
-var mom_btn = document.getElementById('mom_filter');
-var details = document.getElementById('details');
+window.addEventListener("load", function(event) {
+    var myRequest = new XMLHttpRequest();
 
-var data = [];
-var pieData = [];
-var dataFiltered = [];
-var displayed = [];
-var margin = {top: 10, right: 20, bottom: 10, left: 20};
+    myRequest.onreadystatechange = function () {
+        if (myRequest.readyState === 4 && myRequest.status ===200) {
+            data = JSON.parse(myRequest.responseText); 
+            generatePie(data);
+            addCommentary('default');
+        } 
+    }
 
-var width = 600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom,
+    myRequest.open("GET", '/call');
+    myRequest.send();
+  });
+
+
+var reset_btn = document.getElementById('reset'),
+    good_btn =document.getElementById('good_filter'),
+    evil_btn =document.getElementById('evil_filter'),
+    muggle_btn =document.getElementById('muggles'),
+    wizard_btn =document.getElementById('wizards'),
+    mom_btn = document.getElementById('mom_filter'),
+    commentaryText = document.getElementById('commentary'),
+    details = document.getElementById('details');
+
+var data = [],
+    pieData = [],
+    dataFiltered = [],
+    displayed = [],
+    margin = {top: 10, right: 20, bottom: 10, left: 20},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
     radius = Math.min(width, height)/2;
 
-var color = d3.scaleOrdinal(["#cb3030", "e1e34d", "#7171e1", "#359c35", "e3aa3a"]);
-
-var arc = d3.arc()
+var color = d3.scaleOrdinal(["#cb3030", "e1e34d", "#7171e1", "#359c35", "e3aa3a"]),
+    arc = d3.arc()
     .outerRadius(radius * 0.7)
-    .innerRadius(0);
-
-var labelArc = d3.arc()
+    .innerRadius(0),
+    labelArc = d3.arc()
     .outerRadius(radius*0.85)
     .innerRadius(radius*0.85);
+
+var commentary = {
+    "good": "Which Hogwarts houses fought against Voldemort in the Order of the Phoenix or Dumbledore's army? No real surprise that Gryffindors lead the way and Slytherins are thin on the ground. \n Click on a wedge for character names.",
+    "deathEater": "Hagrid said, 'There's not a single witch or wizard who went bad who wasn't in Slytherin', and proportionately, they make up the most of Voldemort's supporters. So Peter Pettigrew's betrayal was an even bigger surprise. \n Click on a wedge for character names.",
+    "muggleBorn": "No unknown houses here, as JK Rowling provides information about a character's house above their family. Despite Salazar Slytherin's preferences, there are a few characters in his house with at least one non-magincal parent. \n Click on a wedge for character names.",
+    "wizardsOnly": "Given that Slytherin's founder planned to murder all students from non-magical families, it's no surprise that a lot of characters from wizard-only families are in Slytherin house. But there's also a lot in Gryffindor - snobbery or a side-effect of Gryffindors being the characters we know most about? \n Click on a wedge for character names.", 
+    "bureaucrats": "Ministry of Magic employees, if we know about their houses, were in Gryffindor and Hufflepuff. Where are the brainy Ravenclaws or the ambitious Slytherins and what does this say about the wizarding civil service? It's probably too small a sample to comment. \n Click on a wedge for character names.",
+    "default": "This chart shows the distribution of houses of characters in the Harry Potter series known to have been in different houses. As readers have spotted, we know more about Harry Potter's fellow Gryffindors than anyone else. \n Click on a wedge for character names."
+}
 
 function generatePie(generateData) {
     pieData = d3.nest()
@@ -64,7 +85,6 @@ function generatePie(generateData) {
             .attr("transform", function(d) {return "translate(" + labelArc.centroid(d) + ")"; })
             .text(function (d) {if (d.data.key ==="undefined"){return "Not known"} else return d.data.key})
             .attr('transform', labelTransform)
-            // .attr('dy', '.35em')
             .style('text-anchor', function(d) {
                 return (midAngle(d)) < Math.PI ? 'start' : 'end';
             })
@@ -148,6 +168,10 @@ function change() {
         .filter(function(d){return d.value===0})
             .attr("style", "display: none;");   
 
+    while (details.firstChild) {
+        details.removeChild(details.firstChild);
+        }
+
 }
 
 
@@ -180,14 +204,15 @@ function filterData (category, data) {
       });
 
     change();
+    addCommentary(category);
 }
 
 function clickArc(house){
-    
+      
     while (details.firstChild) {
         details.removeChild(details.firstChild);
-      }
-      
+        }
+
     var nameList = document.createElement("ul");
     house==="undefined" ? 
     retrieveUnknowns(dataFiltered, data).forEach(function(name) {
@@ -204,6 +229,16 @@ function clickArc(house){
     details.appendChild(nameList);
 
 };
+
+function addCommentary(category) {
+    while (commentaryText.firstChild) {
+        commentaryText.removeChild(commentaryText.firstChild);
+      }
+
+      var newNode = document.createTextNode(commentary[category]);
+
+      commentaryText.appendChild(newNode);
+}
 
 function responsivefy(svg) {
     var container = d3.select(svg.node().parentNode),
@@ -225,24 +260,6 @@ function responsivefy(svg) {
 
 }
 
-api_btn.addEventListener('click', function ()
-{
-    console.log('request made')
-    var myRequest = new XMLHttpRequest();
-
-    myRequest.onreadystatechange = function () {
-        if (myRequest.readyState === 4 && myRequest.status ===200) {
-            data = JSON.parse(myRequest.responseText); 
-
-        generatePie(data);
-      } 
-    }
-
-    myRequest.open("GET", '/call');
-    myRequest.send();
-
-});
-
 reset_btn.addEventListener('click', function() {
     
     dataFiltered = [];
@@ -253,14 +270,11 @@ reset_btn.addEventListener('click', function() {
             .entries(data);
     
     change();
+    addCommentary('default');
 })
 
 good_btn.addEventListener('click', function() {
     filterData('good', data);
-});
-
-neutral_btn.addEventListener('click', function() {
-    filterData('neutral', data);
 });
 
 evil_btn.addEventListener('click', function() {
