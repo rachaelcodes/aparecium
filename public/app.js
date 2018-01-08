@@ -34,11 +34,11 @@ var data = [],
 
 var color = d3.scaleOrdinal(["#cb3030", "e1e34d", "#7171e1", "#359c35", "e3aa3a"]),
     arc = d3.arc()
-    .outerRadius(radius * 0.7)
+    .outerRadius(radius * 0.65)
     .innerRadius(0),
     labelArc = d3.arc()
-    .outerRadius(radius*0.85)
-    .innerRadius(radius*0.85);
+    .outerRadius(radius*0.9)
+    .innerRadius(radius*0.9);
 
 var commentary = {
     "good": "Which Hogwarts houses fought against Voldemort in the Order of the Phoenix or Dumbledore's army? No real surprise that Gryffindors lead the way and Slytherins are thin on the ground. \n Click on a wedge for character names.",
@@ -100,13 +100,13 @@ function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
 
 function labelTransform(d) {
     var pos = labelArc.centroid(d);
-    pos[0] = radius * 0.7 * (midAngle(d) < Math.PI ? 1 : -1);
+    pos[0] = radius * 0.65 * (midAngle(d) < Math.PI ? 1 : -1);
     return 'translate(' + pos + ')';
 }
 
 function calculatePoints(d) {
     var pos = labelArc.centroid(d);
-    pos[0] = radius * 0.7 * (midAngle(d) < Math.PI ? 1 : -1);
+    pos[0] = radius * 0.65 * (midAngle(d) < Math.PI ? 1 : -1);
     return [arc.centroid(d), labelArc.centroid(d), pos]
 }
 
@@ -124,7 +124,7 @@ function labelArcTween(ar) {
     return function(t){
         var d2  = i(t),
             pos = labelArc.centroid(d2); 
-            pos[0] = radius * 0.7 * (midAngle(d2) < Math.PI ? 1 : -1); 
+            pos[0] = radius * 0.65 * (midAngle(d2) < Math.PI ? 1 : -1); 
             return 'translate(' + pos + ')';
         };
     
@@ -136,7 +136,7 @@ function pointTween(ar) {
     return function(t){
         var d2  = i(t),
             pos = labelArc.centroid(d2);
-        pos[0] = radius * 0.7 * (midAngle(d2) < Math.PI ? 1 : -1);
+        pos[0] = radius * 0.65 * (midAngle(d2) < Math.PI ? 1 : -1);
         return [arc.centroid(d2), labelArc.centroid(d2), pos];
     };
 }

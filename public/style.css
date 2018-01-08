@@ -1,9 +1,70 @@
 body {
     box-sizing: content-box;
+    margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+    margin: 0;
+    font-size: 4rem;
+    font-family: 'Cinzel Decorative', cursive;
+}
+
+
+.container {
+    width: 100vw;
+    min-height:100vh;
+    background-color: rgb(246, 245, 247);
+}
+
+header {
+    background: #b465da;
+    background-image: -webkit-linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    color: white;
+    text-align: center;
+    box-shadow: 5px 5px 5px rgba(0,0,0,.2);
+    padding: 0.5rem;
+    text-shadow: rgba(0,0,0,.5) 1px 0 5px;
+}
+
+.card {
+    box-shadow: 5px 5px 5px rgba(0,0,0,.2);
+    background-color: white;
+    padding: 2%;
+    margin: 2%;
+}
+/* 
+.pie {
+    grid-area: pie;
+}
+
+.commentary {
+    grid-area: commentary;
+}
+
+.details {
+    grid-area: details;
+} */
+
+/* .details {
+    display: none;
+} */
+
+main {
+    /* display: grid; */
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas: 
+        "pie commentary"
+        "details details";
 }
 
 svg {
-    overflow: visible;
+    background-color: white;
+    border-radius: 5px;  
 }
 
 polyline {

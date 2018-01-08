@@ -7,25 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative:900|Open+Sans" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
     <header>
         <h1>Aparecium</h1>
-        <h2>Revealing information about Hogwarts characters</h2>
     </header>
+    <nav>
     <button id="muggles">Muggle parent(s)</button>
     <button id="wizards">Wizard-only family</button>
     <button id="good_filter">Good</button>
     <button id="evil_filter">Evil</button>
     <button id="mom_filter">Bureaucrats</button>
     <button id="reset">Reset</button>
+    </nav>
 
-    <div id="pie"></div>
-    <div id="commentary"></div>
-    <div id="details"></div>
-    
+    <main>
+    <div id="pie" class="card pie"></div>
+    <div id="commentary" class="card commentary"></div>
+    <div id="details" class="card details"></div>
+    </main>
+
+    <footer>
     <div class="credit">Data provided by the <a href="https://www.potterapi.com/">Harry Potter API</a></div>
-
+    </footer>
+    </div>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-path.v1.min.js"></script>
     <script src="https://d3js.org/d3-shape.v1.min.js"></script>
