@@ -13,6 +13,13 @@ h1 {
     font-family: 'Seaweed Script', sans-serif;
 }
 
+a {
+    color: rgb(151, 143, 237);
+}
+
+a:visited {
+    color: rgb(171, 143, 237);
+}
 
 .container {
     width: 100vw;
@@ -53,7 +60,8 @@ header {
     grid-area: details;
     overflow: scroll;
     min-height: 0; 
-    padding: 2rem;     
+    padding: 2rem;
+    font-size: 1.2rem;     
 } 
 
 main {
@@ -88,6 +96,7 @@ ul {
     padding: 0;
     line-height: 1.4;
     font-style: oblique;
+    font-size: 1rem; 
 }
 
 nav {
