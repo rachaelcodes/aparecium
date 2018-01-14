@@ -1,8 +1,8 @@
 {
   "name": "aparecium",
   "version": "1.0.0",
-  "description": "harry potter visualised",
-  "main": "index.js",
+  "description": "harry potter - visualised",
+  "main": "index.html",
   "scripts": {
     "start": "node index.js",
     "test": "nyc tape src/test/test.js | tap-spec",
@@ -28,5 +28,18 @@
     "supertest": "^3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rachaelcodes/aparecium.git"
+  },
+  "keywords": [
+    "d3",
+    "node",
+    "express"
+  ],
+  "bugs": {
+    "url": "https://github.com/rachaelcodes/aparecium/issues"
+  },
+  "homepage": "https://github.com/rachaelcodes/aparecium#readme"
 }

@@ -4,7 +4,6 @@ var evilBtn = document.getElementById('evil_filter')
 var muggleBtn = document.getElementById('muggles')
 var wizardBtn = document.getElementById('wizards')
 var momBtn = document.getElementById('mom_filter')
-var commentaryText = document.getElementById('commentary')
 var details = document.getElementById('details')
 
 var commentary = {
@@ -135,10 +134,6 @@ function calculatePoints (d) {
 function filterData (category, data) {
   dataFiltered = filter(category, data)
   
-  while (details.firstChild) {
-    details.removeChild(details.firstChild)
-  }
-  
   summarizeData(dataFiltered)
   
   while (dataSummary.length < 5) {
@@ -160,13 +155,13 @@ function filterData (category, data) {
 }
   
 function addCommentary (category) {
-  while (commentaryText.firstChild) {
-    commentaryText.removeChild(commentaryText.firstChild)
+  while (details.firstChild) {
+    details.removeChild(details.firstChild)
   }
   
   var newNode = document.createTextNode(commentary[category])
   
-  commentaryText.appendChild(newNode)
+  details.appendChild(newNode)
 }
 
 function change () {
@@ -196,10 +191,6 @@ function change () {
   lines
     .filter(function (d) { return d.value === 0 })
     .attr('style', 'display: none;')
-
-  while (details.firstChild) {
-    details.removeChild(details.firstChild)
-  }
 }
 
 function arcTween (ar) {
@@ -275,7 +266,3 @@ window.addEventListener('load', function (event) {
   myRequest.open('GET', '/call')
   myRequest.send()
 })
-
-// Useful articles: 
-// https://bl.ocks.org/mbhall88/22f91dc6c9509b709defde9dc29c63f2#license
-// http://www.cagrimmett.com/til/2016/08/19/d3-pie-chart.html

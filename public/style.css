@@ -10,56 +10,63 @@ body {
 h1 {
     margin: 0;
     font-size: 4rem;
-    font-family: 'Cinzel Decorative', cursive;
+    font-family: 'Seaweed Script', sans-serif;
 }
 
 
 .container {
     width: 100vw;
-    min-height:100vh;
-    background-color: rgb(246, 245, 247);
+    min-height: 100vh;
+    background-color: #f2e9f7;
 }
 
 header {
-    background: #b465da;
-    background-image: -webkit-linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
-    background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    background: #6441A5;
+    background: -webkit-linear-gradient(to right, #2a0845, #6441A5);
+    background: linear-gradient(to right, #2a0845, #6441A5);
     color: white;
-    text-align: center;
+    text-align: right;
     box-shadow: 5px 5px 5px rgba(0,0,0,.2);
-    padding: 0.5rem;
+    padding: 1rem 3rem;
     text-shadow: rgba(0,0,0,.5) 1px 0 5px;
 }
 
 .card {
     box-shadow: 5px 5px 5px rgba(0,0,0,.2);
     background-color: white;
-    padding: 2%;
-    margin: 2%;
-}
-/* 
-.pie {
-    grid-area: pie;
+    padding: .5rem;
+    margin: .3rem;
+    display: flex;
 }
 
-.commentary {
-    grid-area: commentary;
+.pie {
+    grid-area: pie;
+    max-height: 100%;
+
 }
 
 .details {
+    background: #6441A5;
+    background: -webkit-linear-gradient(to top, #2a0845, #6441A5);
+    background: linear-gradient(to top, #2a0845, #6441A5);
+    color: white;
     grid-area: details;
-} */
-
-/* .details {
-    display: none;
-} */
+    overflow: scroll;
+    min-height: 0; 
+    padding: 2rem;     
+} 
 
 main {
-    /* display: grid; */
+    display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-areas: 
-        "pie commentary"
-        "details details";
+        "pie details";
+    padding: 1rem;
+    padding-top: .2rem;
+    justify-items: stretch;
+    align-items: stretch;
+    min-height: 0;
+    min-width: 0; 
 }
 
 svg {
@@ -73,4 +80,36 @@ polyline {
     stroke-width: 2px;
     fill: none;
     shape-rendering: geometricPrecision;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+    font-style: oblique;
+}
+
+nav {
+    margin: 1rem;
+}
+
+button {
+    background-color: #6441A5;
+    color: white;
+    font-size: .8rem;
+    font-family: 'Open Sans', sans-serif;
+    padding: 0.3rem;
+    margin: .2rem;
+    border-radius: 5px;
+    border: 2px solid white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+}
+
+footer {
+    background-color: black;
+    color: white;
+    padding: .5rem;
+    display: flex;
+    justify-content: space-between;
 }
