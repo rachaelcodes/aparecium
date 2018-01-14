@@ -224,7 +224,7 @@ function labelArcTween (ar) {
 function pointTween (ar) {
   var i = d3.interpolate(this._current, ar)
   this._current = i(0)
-  return function(t) {
+  return function (t) {
     var d2 = i(t)
     var pos = labelArc.centroid(d2)
     pos[0] = radius * 0.65 * (midAngle(d2) < Math.PI ? 1 : -1)

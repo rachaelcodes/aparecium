@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "tape src/test/test.js | tap-spec",
+    "test": "nyc tape src/test/test.js | tap-spec",
     "dev": "nodemon index.js"
   },
   "author": "Rachael O'Rourke",
@@ -24,6 +24,7 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "nodemon": "^1.14.3",
+    "nyc": "^11.4.1",
     "supertest": "^3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0"

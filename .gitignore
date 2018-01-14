@@ -4,3 +4,7 @@
 config.env
 
 src/example_data.json
+
+/.nyc_output/
+
+/coverage/
