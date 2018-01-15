@@ -7,12 +7,12 @@ var momBtn = document.getElementById('mom_filter')
 var details = document.getElementById('details')
 
 var commentary = {
-  'good': "Which Hogwarts houses fought against Voldemort in the Order of the Phoenix or Dumbledore's army? No real surprise that Gryffindors lead the way and Slytherins are thin on the ground. \n Click on a wedge for character names.",
-  'deathEater': "Hagrid said, 'There's not a single witch or wizard who went bad who wasn't in Slytherin', and proportionately, they make up the most of Voldemort's supporters. So Peter Pettigrew's betrayal was an even bigger surprise. \n Click on a wedge for character names.",
-  'muggleBorn': "No unknown houses here, as JK Rowling provides information about a character's house above their family. Despite Salazar Slytherin's preferences, there are a few characters in his house with at least one non-magincal parent. \n Click on a wedge for character names.",
-  'wizardsOnly': "Given that Slytherin's founder planned to murder all students from non-magical families, it's no surprise that a lot of characters from wizard-only families are in Slytherin house. But there's also a lot in Gryffindor - snobbery or a side-effect of Gryffindors being the characters we know most about? \n Click on a wedge for character names.", 
-  'bureaucrats': "Ministry of Magic employees, if we know about their houses, were in Gryffindor and Hufflepuff. Where are the brainy Ravenclaws or the ambitious Slytherins and what does this say about the wizarding civil service? It's probably too small a sample to comment. \n Click on a wedge for character names.",
-  'default': "This chart shows the distribution of houses of characters in the Harry Potter series known to have been in different houses. As readers have spotted, we know more about Harry Potter's fellow Gryffindors than anyone else. \n Click on a wedge for character names."
+  'good': "Which Hogwarts houses fought against Voldemort in the Order of the Phoenix or Dumbledore's army? No real surprise that Gryffindors lead the way and Slytherins are thin on the ground.",
+  'deathEater': "Hagrid said, 'There's not a single witch or wizard who went bad who wasn't in Slytherin', and proportionately, they make up the most of Voldemort's supporters. So Peter Pettigrew's betrayal was an even bigger surprise.",
+  'muggleBorn': "No unknown houses here, as JK Rowling provides information about a character's house above their family. Despite Salazar Slytherin's preferences, there are a few characters in his house with at least one non-magincal parent.",
+  'wizardsOnly': "Given that Slytherin's founder planned to murder all students from non-magical families, it's no surprise that a lot of characters from wizard-only families are in Slytherin house. But there's also a lot in Gryffindor - snobbery or a side-effect of Gryffindors being the characters we know most about?",
+  'bureaucrats': "Ministry of Magic employees, if we know about their houses, were in Gryffindor and Hufflepuff. Where are the brainy Ravenclaws or the ambitious Slytherins and what does this say about the wizarding civil service? It's probably too small a sample to comment.",
+  'default': "This chart shows the distribution of houses of characters in the Harry Potter series known to have been in different houses. As readers have spotted, we know more about Harry Potter's fellow Gryffindors than anyone else."
 }
 
 var data = []
@@ -20,17 +20,17 @@ var dataSummary = []
 var dataFiltered = []
 
 var margin = {top: 10, right: 20, bottom: 10, left: 20}
-var width = 500 - margin.left - margin.right
-var height = 500 - margin.top - margin.bottom
+var width = 250 - margin.left - margin.right
+var height = 250 - margin.top - margin.bottom
 var radius = Math.min(width, height) / 2
 var color = d3.scaleOrdinal(['#cb3030', 'e1e34d', '#7171e1', '#359c35', 'e3aa3a'])
     
 var arc = d3.arc()
-  .outerRadius(radius * 0.65)
+  .outerRadius(radius * 0.45)
   .innerRadius(0);
 var labelArc = d3.arc()
-  .outerRadius(radius * 0.9)
-  .innerRadius(radius * 0.9)
+  .outerRadius(radius * 0.75)
+  .innerRadius(radius * 0.75)
 
 function summarizeData (rawData) {
   dataSummary = d3.nest()
@@ -87,7 +87,7 @@ function responsivefy (svg) {
     .attr('preseveAspectRatio', 'xMinYMid')
     .call(resize)
 
-  d3.select(window).on('resize.' + container.attr('id'), resize)
+  d3.select(window).on('resize' + container.attr('id'), resize)
 
   function resize () {
     var targetWidth = parseInt(container.style('width'))
@@ -119,7 +119,7 @@ function clickArc (house) {
 
 function labelTransform (d) {
   var pos = labelArc.centroid(d)
-  pos[0] = radius * 0.65 * (midAngle(d) < Math.PI ? 1 : -1)
+  pos[0] = radius * 0.5 * (midAngle(d) < Math.PI ? 1 : -1)
   return 'translate(' + pos + ')'
 }
 
@@ -127,7 +127,7 @@ function midAngle (d) { return d.startAngle + (d.endAngle - d.startAngle) / 2 }
 
 function calculatePoints (d) {
   var pos = labelArc.centroid(d)
-  pos[0] = radius * 0.65 * (midAngle(d) < Math.PI ? 1 : -1)
+  pos[0] = radius * 0.5 * (midAngle(d) < Math.PI ? 1 : -1)
   return [arc.centroid(d), labelArc.centroid(d), pos]
 }
 
@@ -159,9 +159,16 @@ function addCommentary (category) {
     details.removeChild(details.firstChild)
   }
   
+  var title = document.createElement('h2')
+  title.innerText = 'Commentary'
+
   var newNode = document.createTextNode(commentary[category])
   
+  details.appendChild(title)
   details.appendChild(newNode)
+  details.appendChild(document.createElement('br'))
+  details.appendChild(document.createElement('br'))
+  details.appendChild(document.createTextNode('Click on a wedge for more details.'))
 }
 
 function change () {
@@ -207,7 +214,7 @@ function labelArcTween (ar) {
   return function (t) {
     var d2 = i(t)
     var pos = labelArc.centroid(d2)
-    pos[0] = radius * 0.65 * (midAngle(d2) < Math.PI ? 1 : -1)
+    pos[0] = radius * 0.5 * (midAngle(d2) < Math.PI ? 1 : -1)
     return 'translate(' + pos + ')'
   }
 }
@@ -218,7 +225,7 @@ function pointTween (ar) {
   return function (t) {
     var d2 = i(t)
     var pos = labelArc.centroid(d2)
-    pos[0] = radius * 0.65 * (midAngle(d2) < Math.PI ? 1 : -1)
+    pos[0] = radius * 0.5 * (midAngle(d2) < Math.PI ? 1 : -1)
     return [arc.centroid(d2), labelArc.centroid(d2), pos]
   }
 }

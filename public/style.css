@@ -1,15 +1,22 @@
 body {
-    box-sizing: content-box;
+    box-sizing: border-box;
     margin: 0;
 	padding: 0;
 	border: 0;
 	vertical-align: baseline;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 h1 {
     margin: 0;
     font-size: 4rem;
+    font-family: 'Seaweed Script', sans-serif;
+}
+
+h2 {
+    margin: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
     font-family: 'Seaweed Script', sans-serif;
 }
 
@@ -23,8 +30,10 @@ a:visited {
 
 .container {
     width: 100vw;
-    min-height: 100vh;
+    height: 95vh;
+    overflow: scroll;
     background-color: #f2e9f7;
+    position: relative;
 }
 
 header {
@@ -38,18 +47,24 @@ header {
     text-shadow: rgba(0,0,0,.5) 1px 0 5px;
 }
 
+main {
+    padding: 1rem;
+    padding-top: .2rem;
+    display: flex;
+}
+
 .card {
     box-shadow: 5px 5px 5px rgba(0,0,0,.2);
     background-color: white;
     padding: .5rem;
     margin: .3rem;
-    display: flex;
+    border: 1px lightgrey solid;
+    overflow-y: scroll;
 }
 
 .pie {
-    grid-area: pie;
-    max-height: 100%;
-
+    display: flex;
+    flex: 2;
 }
 
 .details {
@@ -57,35 +72,20 @@ header {
     background: -webkit-linear-gradient(to top, #2a0845, #6441A5);
     background: linear-gradient(to top, #2a0845, #6441A5);
     color: white;
-    grid-area: details;
-    overflow: scroll;
-    min-height: 0; 
-    padding: 2rem;
-    font-size: 1.2rem;     
-} 
-
-main {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-areas: 
-        "pie details";
     padding: 1rem;
-    padding-top: .2rem;
-    justify-items: stretch;
-    align-items: stretch;
-    min-height: 0;
-    min-width: 0; 
-}
+    flex: 1; 
+} 
 
 svg {
     background-color: white;
-    border-radius: 5px;  
+    border-radius: 5px; 
+    margin: 0 auto; 
 }
 
 polyline {
     opacity: .3;
     stroke: black;
-    stroke-width: 2px;
+    stroke-width: .5px;
     fill: none;
     shape-rendering: geometricPrecision;
 }
@@ -103,11 +103,15 @@ nav {
     margin: 1rem;
 }
 
+text {
+    font-size: 0.6rem;
+}
+
 button {
     background-color: #6441A5;
     color: white;
     font-size: .8rem;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Lato', sans-serif;
     padding: 0.3rem;
     margin: .2rem;
     border-radius: 5px;
@@ -121,4 +125,22 @@ footer {
     padding: .5rem;
     display: flex;
     justify-content: space-between;
+    height: 5vh;
 }
+
+@media (max-width: 650px) {
+    main {
+      flex-direction: column;
+    }
+    .container {
+        height: initial;
+    }
+    ul {
+        text-align: center;
+    }
+    footer {
+        flex-direction: column;
+        height: 8vh;
+    }
+  }
+
